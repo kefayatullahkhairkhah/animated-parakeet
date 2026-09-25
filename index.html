@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A real weather dashboard with live city search, current conditions, hourly forecasts, and weekly outlook.">
+<title>Weather Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen text-slate-900" data-page="home" data-weather-theme="clear">
+<main class="app-shell">
+<header class="sticky top-0 z-20 border-b border-white/20 bg-slate-950/35 backdrop-blur-xl">
+<div class="mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-3 py-4 sm:px-4 lg:px-6">
+<div>
+<p class="text-xs font-semibold uppercase tracking-[0.35em] text-sky-100/80">Weather Lab</p>
+<h1 class="text-xl font-extrabold text-white sm:text-2xl">Weather Dashboard</h1>
+</div>
+<nav class="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 p-1 text-sm text-white">
+<a href="index.html" class="nav-link nav-link-active">Home</a>
+<a href="forecast.html" class="nav-link">Forecast</a>
+<a href="about.html" class="nav-link">About</a>
+<a href="contact.html" class="nav-link">Contact</a>
+</nav>
+</div>
+</header>
+
+<section class="mx-auto grid max-w-[1500px] gap-6 px-3 py-6 sm:px-4 lg:px-6 xl:grid-cols-[1.35fr_0.65fr]">
+<div class="space-y-6">
+<div class="glass-panel overflow-hidden">
+<div class="flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+<div class="max-w-4xl space-y-4">
+<p class="eyebrow">Live weather data</p>
+<h2 class="text-3xl font-black text-white sm:text-5xl">Search a city and get a real forecast in seconds.</h2>
+<p class="max-w-xl text-sm leading-6 text-slate-200 sm:text-base">This dashboard uses live weather data from Open-Meteo, supports Celsius and Fahrenheit, and keeps the selected city across pages.</p>
+<form id="city-form" class="mt-6 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-stretch">
+<input id="city-input" name="city" type="search" value="Kabul" placeholder="Search a city, for example Tokyo or London" class="input-field min-w-0" autocomplete="off">
+<button type="submit" class="primary-button sm:min-w-[10rem]">Search weather</button>
+</form>
+<div id="suggestions-panel" class="suggestions-panel" hidden></div>
+<div id="status-message" class="status-pill">Ready to load live weather.</div>
+</div>
+<div class="flex flex-col items-start gap-3 rounded-[2rem] border border-white/15 bg-white/10 p-5 text-white shadow-2xl shadow-slate-950/20 backdrop-blur">
+<div class="flex items-center gap-3">
+<button id="celsius-toggle" type="button" class="unit-button unit-button-active" aria-pressed="true">°C</button>
+<button id="fahrenheit-toggle" type="button" class="unit-button" aria-pressed="false">°F</button>
+</div>
+<div class="rounded-3xl bg-white/10 px-5 py-4 text-sm text-slate-100">
+<p class="font-semibold">Selected city</p>
+<p id="location-meta" class="mt-1 text-xl font-bold text-white">Kabul, Afghanistan</p>
+</div>
+<div class="rounded-3xl bg-white/10 px-5 py-4 text-sm text-slate-100">
+<p class="font-semibold">Current time</p>
+<p id="current-date" class="mt-1 text-xl font-bold text-white">Loading...</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
+<button type="button" class="city-chip" data-city="Tehran">Tehran</button>
+<button type="button" class="city-chip" data-city="Istanbul">Istanbul</button>
+<button type="button" class="city-chip" data-city="London">London</button>
+<button type="button" class="city-chip" data-city="Dubai">Dubai</button>
+</div>
+
+<div class="grid gap-4 lg:grid-cols-2">
+<article class="glass-panel p-6 sm:p-8">
+<div class="flex items-start justify-between gap-4">
+<div>
+<p class="eyebrow">Current conditions</p>
+<h3 id="current-city" class="mt-2 text-3xl font-black text-white">Kabul</h3>
+<p id="weather-label" class="mt-1 text-sm text-slate-200">Clear sky</p>
+</div>
+<div id="weather-icon" class="weather-icon">☀</div>
+</div>
+<div class="mt-6 flex items-end gap-3">
+<div id="current-temp" class="text-6xl font-black text-white sm:text-7xl">28°</div>
+<div class="pb-2 text-sm text-slate-200">Feels like <span id="feels-like-value">30°</span></div>
+</div>
+<div class="mt-6 grid gap-3 text-sm text-slate-100 sm:grid-cols-2">
+<div class="info-tile">
+<span>Humidity</span>
+<strong id="humidity-value">--%</strong>
+</div>
+<div class="info-tile">
+<span>Wind</span>
+<strong id="wind-value">--</strong>
+</div>
+<div class="info-tile">
+<span>Pressure</span>
+<strong id="pressure-value">-- hPa</strong>
+</div>
+<div class="info-tile">
+<span>Visibility</span>
+<strong id="visibility-value">--</strong>
+</div>
+</div>
+</article>
+
+<article class="glass-panel p-6 sm:p-8">
+<div class="flex items-center justify-between gap-4">
+<div>
+<p class="eyebrow">Sunrise and sunset</p>
+<h3 class="mt-2 text-2xl font-bold text-white">Daily overview</h3>
+</div>
+<p class="text-sm text-slate-200">Updated from the latest forecast</p>
+</div>
+<div class="mt-6 grid gap-4 sm:grid-cols-2">
+<div class="info-tile large">
+<span>Sunrise</span>
+<strong id="sunrise-value">--</strong>
+</div>
+<div class="info-tile large">
+<span>Sunset</span>
+<strong id="sunset-value">--</strong>
+</div>
+</div>
+<div class="mt-6 rounded-[1.75rem] border border-white/10 bg-slate-950/25 p-5 text-sm text-slate-100">
+<p class="font-semibold text-white">Forecast summary</p>
+<p class="mt-2 leading-6">Track the next few hours and the next several days without leaving the page. The forecast tab shows the same city in a denser view.</p>
+</div>
+</article>
+</div>
+</div>
+
+<aside class="space-y-6">
+<section class="glass-panel p-6 sm:p-8">
+<div class="flex items-center justify-between gap-3">
+<div>
+<p class="eyebrow">Hourly forecast</p>
+<h3 class="mt-2 text-2xl font-bold text-white">Next hours</h3>
+</div>
+<a href="forecast.html" class="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-white/15">Full view</a>
+</div>
+<div id="hourly-list" class="forecast-scroll mt-6"></div>
+</section>
+
+<section class="glass-panel p-6 sm:p-8">
+<div class="flex items-center justify-between gap-3">
+<div>
+<p class="eyebrow">7 day outlook</p>
+<h3 class="mt-2 text-2xl font-bold text-white">Weekly forecast</h3>
+</div>
+</div>
+<div id="daily-list" class="mt-6 space-y-3"></div>
+</section>
+</aside>
+</section>
+</main>
+
+<script src="app.js" defer></script>
+</body>
+</html>
