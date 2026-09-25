@@ -51,6 +51,7 @@ const elements = {
     city: document.getElementById('current-city'),
     location: document.getElementById('location-meta'),
     date: document.getElementById('current-date'),
+    lastUpdated: document.getElementById('last-updated'),
     temp: document.getElementById('current-temp'),
     feelsLike: document.getElementById('feels-like-value'),
     label: document.getElementById('weather-label'),
@@ -340,6 +341,13 @@ function renderCurrent(location, data) {
             month: 'short',
             day: 'numeric',
         });
+    }
+
+    if (elements.lastUpdated) {
+        elements.lastUpdated.textContent = `Last updated: ${new Date().toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+        })}`;
     }
 
     if (elements.temp) {
