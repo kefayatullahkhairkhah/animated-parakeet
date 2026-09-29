@@ -279,6 +279,7 @@ nav {
 .info-tile strong {
     font-size: 1.15rem;
     color: #ffffff;
+    overflow-wrap: anywhere;
 }
 
 .forecast-scroll {
@@ -343,15 +344,25 @@ nav {
 }
 
 @media (max-width: 640px) {
-    .nav-link {
-        min-width: auto;
-        padding: 0.55rem 0.85rem;
-        font-size: 0.8rem;
+    .app-shell > header > div {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .app-shell > header nav {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.25rem;
+        width: 100%;
+        max-width: none;
+        border-radius: 1rem;
     }
 
     .nav-link {
-        min-width: 4.7rem;
-        padding-inline: 0.8rem;
+        min-width: 0;
+        padding: 0.55rem 0.15rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
     }
 
     .glass-panel {
